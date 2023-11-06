@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <title>Calculator</title>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.25.0/babel.min.js"></script>
+
+  <style>
+    .calculator {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .calculator button {
+      padding: 10px;
+      font-size: 20px;
+    }
+
+    .calculator input {
+      padding: 100px;
+      font-size: 20px;
+      grid-column: span 40;
+      margin-bottom: 200px;
+      height: 1200px;
+      width: 1200px;
+    }
+
+    .calculator .clear-btn {
+      grid-column: span 2;
+    }
+
+    .calculator .delete-btn {
+      grid-column: span 2; /* изменяем id-column на grid-column */
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    class Calculator extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          result: ''
+        };
+      }
+
+      handleClick = e => {
+        if (e.target.value === '=') {
+          this.calculate();
+        } else if (e.target.value === 'clear') {
+          this.reset();
+        } else {
+          this.setState({ result: this.state.result + e.target.value });
+        }
+      };
+
+      calculate = () => {
+        try {
+          const result = eval(this.state.result);
+          this.setState({ result });
+        } catch (error) {
+          this.setState({ result: 'error' });
+        }
+      };
+
+      reset = () => {
+        this.setState({ result: '' });
+      };
+
+      deleteLastCharacter = () => {
+        const newResult = this.state.result.slice(0, -1);
+        this.setState({ result: newResult });
+      };
+
+      render() {
+        return (
+          <div>
+            <input type="text" value={this.state.result} readOnly />
+
+            <div className="calculator">
+              <button onClick={this.handleClick} value={1}>1</button>
+              <button onClick={this.handleClick} value={2}>2</button>
+              <button onClick={this.handleClick} value={3}>3</button>
+              <button onClick={this.handleClick} value={'+'}>+</button>
+
+              <button onClick={this.handleClick} value={4}>4</button>
+              <button onClick={this.handleClick} value={5}>5</button>
+              <button onClick={this.handleClick} value={6}>6</button>
+              <button onClick={this.handleClick} value={'-'}>-</button>
+
+              <button onClick={this.handleClick} value={7}>7</button>
+              <button onClick={this.handleClick} value={8}>8</button>
+              <button onClick={this.handleClick} value={9}>9</button>
+              <button onClick={this.handleClick} value={'*'}>*</button>
+
+              <button onClick={this.handleClick} value={'.'}>.</button>
+              <button onClick={this.handleClick} value={0}>0</button>
+              <button onClick={this.handleClick} value={'/'}>/</button>
+              <button onClick={this.handleClick} value={'='}>=</button>
+
+              <button onClick={this.handleClick} value={'clear'} className="clear-btn">Clear</button>
+              <button onClick={this.deleteLastCharacter} className="delete-btn">Delete</button>
+
+            </div>
+
+            <div>
+
+            </div>
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(<Calculator />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>
