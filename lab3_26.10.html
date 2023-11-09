@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Книжный магазин</title>
+  <title>Bookstore</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <meta charset="utf-8" />
   <style>
@@ -16,14 +16,7 @@
       background-color: #C0C0C0;
       border: 2px solid black;
     }
-    .card img {
-      min-height: 300px;
-      max-height: 300px;
-    }
-    .small-card img {
-      min-height: 150px;
-      max-height: 150px;
-    }
+
     .btn-primary{
       background-color:#FF8000;
       color: white;
@@ -45,9 +38,6 @@
 </head>
 <body>
   <div id="root"></div>
-  <footer>
-    <p>Книжный магазин &copy; 2023</p>
-  </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.1/umd/react.development.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.1/umd/react-dom.development.js"></script>
@@ -55,7 +45,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <script type="text/babel">
-    function NavigationBar({ onSearchChange }) {
+  function NavigationBar({ onSearchChange }) {
       return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <a className="navbar-brand" href="#">Книжный магазин</a>
@@ -91,18 +81,23 @@
       );
     }
 
-    function Book(props) {
-      const cardClass = `card ${props.className}`;
+  function Card({children}){
+    return(
+      <div className="card">{children}</div>
+    );
+  }
+
+  function Book({ title, description, url, price, height, width }) {
       return (
-        <div className={cardClass}>
-          <img src={props.url} className="card-img-top" alt="Book Image" />
+      <Card>
+          <img src={url} className="card-img-top" height = {height} width= {width} alt="Book Image" />
           <div className="card-body">
-            <h5 className="card-title">{props.title}</h5>
-            <p className="card-text">{props.description}</p>
+            <h5 className="card-title">{title}</h5>
+            <p className="card-text">{description}</p>
             <a href="#" className="btn btn-primary">В корзину</a>
-            <a href="#" className="btn btn-primary2">Купить за {props.price} руб.</a>
+            <a href="#" className="btn btn-primary2">Купить за {price} руб.</a>
           </div>
-        </div>
+      </Card>
       );
     }
 
@@ -113,7 +108,6 @@
         { id: 2, title: "Гарри Поттер и Тайная комната", description: "Книга рассказывает о втором учебном годе в школе чародейства и волшебства Хогвартс...", url: "https://images.spasibovsem.ru/catalog/original/audiokniga-garri-potter-i-tajnaya-komnata-dzhoan-rouling-otzyvy-1588013935.jpg", price: "1100", height: 300, width: 300 },
         { id: 3, title: "Гарри Поттер и узник Азкабана", description: "Третья книга Джоан Роулинг из серии романов о Гарри Поттере. В третьей книге...", url: "https://sun9-41.userapi.com/impg/7DOVM4ojRAaUFlweN4vTMYnij3H0boczC0rkJw/fuQvm90RUQo.jpg?size=453x604&quality=96&sign=1bb94b9eb9b0b0a718f390d6d4401c01&c_uniq_tag=Z-0U4sx3qKh3CI-vRAl_UdfQppXGUCHMsqEyXOgQbSs&type=album", price: "1200", height: 300, width: 300 }
       ];
-
       const smallBooks = [
         { id: 4, title: "Гарри Поттер и Кубок огня", description: "По сюжету Гарри Поттер против своей воли вовлекается в участие в Турнире Трёх Волшебников...", url: "https://i.pinimg.com/originals/ca/ad/e1/caade181726ff21a360dab4fd379d939.jpg", price: "1300", height: 150, width: 150 },
         { id: 5, title: "Гарри Поттер и Орден Феникса", description: "Пятая часть в серии книг о Гарри Поттере. Сюжет произведения заключается в борьбе антагониста Лорда Волан-де-Морта...", url: "https://static.alipson.fr/m215/p439215/p1_FULL.jpg", price: "1400", height: 150, width: 150 },
@@ -132,20 +126,23 @@
         book.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
+
+      const morebooks = filteredBooks.map((book) => (
+              <Book key={book.id} {...book} />
+            ))
+
+      const moresmallBooks = filteredBooks.map((book) => (
+              <Book key={book.id} {...book} />
+            ))
+
       return (
         <div>
-          <NavigationBar onSearchChange={handleSearchChange} />
-
+        <NavigationBar onSearchChange={handleSearchChange} />
           <div className="book-container">
-            {filteredBooks.map((book) => (
-              <Book key={book.id} {...book} />
-            ))}
+          {morebooks}
           </div>
-
           <div className="book-container">
-            {filteredSmallBooks.map((book) => (
-              <Book key={book.id} {...book} className="small-card" />
-            ))}
+          {moresmallBooks}
           </div>
         </div>
       );
@@ -153,5 +150,8 @@
 
     ReactDOM.render(<Bookstore />, document.getElementById("root"));
   </script>
+  <!-- Include React and ReactDOM libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.1/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.1/umd/react-dom.development.js"></script>
 </body>
 </html>
